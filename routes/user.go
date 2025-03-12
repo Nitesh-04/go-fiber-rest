@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"errors"
+
 	"github.com/Nitesh-04/go-fiber-rest/database"
 	"github.com/Nitesh-04/go-fiber-rest/models"
 	"github.com/gofiber/fiber/v2"
@@ -46,4 +48,32 @@ func GetUsers (c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(responseUsers)
 
+}
+
+func FindUser(id int, user *models.User) error {
+	database.Database.Db.Find(&user, "id = ?", id)
+
+	if user.ID == 0 {
+		return errors.New("User doesnt exist")
+	}
+
+	return nil
+}
+
+func GetUserById(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+
+	var user = models.User{}
+
+	if err != nil {
+		return c.Status(400).JSON("User not found")
+	}
+
+	if err := FindUser(id, &user); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	responseUser := CreateResponseUser(user)
+
+	return c.Status(200).JSON(responseUser)
 }
