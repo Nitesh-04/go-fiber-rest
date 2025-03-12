@@ -36,7 +36,6 @@ cover.out
 .air/
 .air.toml
 
-# PostgreSQL database-related files
-*.sql  # Ignore raw SQL dumps if not needed
-pgdata/ # If running PostgreSQL locally with Docker
-.env    # Environment files with database credentials
+# db
+
+api.db
