@@ -1,0 +1,42 @@
+# Binaries and executables
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+
+# Build artifacts
+/tmp/
+bin/
+build/
+
+# Go Modules
+vendor/
+*.sum
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.cache
+*.tmp
+.DS_Store
+
+# Go test cache
+*.test
+cover.out
+
+# Air live reload files (if using Air for live reload)
+.air/
+.air.toml
+
+# PostgreSQL database-related files
+*.sql  # Ignore raw SQL dumps if not needed
+pgdata/ # If running PostgreSQL locally with Docker
+.env    # Environment files with database credentials
