@@ -77,3 +77,37 @@ func GetUserById(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(responseUser)
 }
+
+func UpdateUser (c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+
+	var user = models.User{}
+
+	if err != nil {
+		return c.Status(400).JSON("User not found")
+	}
+
+	if err := FindUser(id, &user); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	type UpdateUser struct {
+		FirstName string `json:"first_name"`
+		LastName string `json:"last_name"`
+	}
+
+	var updateData UpdateUser
+
+	if err := c.BodyParser((&updateData)); err != nil {
+		return c.Status(500).JSON(err.Error())
+	}
+
+	user.FirstName = updateData.FirstName
+	user.LastName = updateData.LastName
+
+	database.Database.Db.Save(&user)
+
+	responseUser := CreateResponseUser(user)
+
+	return c.Status(200).JSON(responseUser)
+}
