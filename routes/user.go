@@ -34,7 +34,7 @@ func CreateUser(c *fiber.Ctx) error {
 	return c.Status(200).JSON(responseUser)
 }
 
-func GetUsers (c *fiber.Ctx) error {
+func GetUsers(c *fiber.Ctx) error {
 	users := []models.User{}
 
 	database.Database.Db.Find(&users)
@@ -78,7 +78,7 @@ func GetUserById(c *fiber.Ctx) error {
 	return c.Status(200).JSON(responseUser)
 }
 
-func UpdateUser (c *fiber.Ctx) error {
+func UpdateUser(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id")
 
 	var user = models.User{}
