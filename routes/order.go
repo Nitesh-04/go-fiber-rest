@@ -80,7 +80,7 @@ func GetOrders(c *fiber.Ctx) error {
 func FindOrder(id int, order *models.Order) error {
 	database.Database.Db.Find(&order, "id = ?", id)
 	if order.ID == 0 {
-		return errors.New("No order exists")
+		return errors.New("no order exists")
 	}
 
 	return nil
@@ -138,5 +138,24 @@ func UpdateOrder(c *fiber.Ctx) error {
 	}
 
 	database.Database.Db.Model(&order).Updates(newOrder)
+	
+	return c.Status(200).JSON(order)
+}
 
+func DeleteOrder(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+
+	if err != nil {
+		return c.Status(400).JSON("Order not found")
+	}
+
+	var order = models.Order{}
+
+	if err := FindOrder(id, &order); err != nil {
+		return c.Status(400).JSON("Order not found")
+	}
+
+	database.Database.Db.Delete(&order)
+
+	return c.Status(200).JSON("Order deleted")
 }
