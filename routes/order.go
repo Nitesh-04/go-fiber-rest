@@ -15,7 +15,7 @@ type Order struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func createResponseOrder(order models.Order, user User, product Product) Order {
+func CreateResponseOrder(order models.Order, user User, product Product) Order {
 	return Order{
 		ID:        order.ID,
 		User:      user,
@@ -48,8 +48,30 @@ func CreateOrder (c *fiber.Ctx) error {
 	responseUser := CreateResponseUser(user)
 	responseProduct := CreateResponseProduct(product)
 
-	responseOrder := createResponseOrder(order, responseUser, responseProduct)
+	responseOrder := CreateResponseOrder(order, responseUser, responseProduct)
 
 	return c.Status(200).JSON(responseOrder)
 
+}
+
+func GetOrders (c *fiber.Ctx) error {
+	orders := []models.Order{}
+
+	database.Database.Db.Find(&orders)
+	
+	responseOrders := []Order{}
+
+	for _, order := range orders {
+		var user models.User
+		var product models.Product
+
+		database.Database.Db.Find(&user, "id = ?", order.UserID)
+		database.Database.Db.Find(&product, "id = ?", order.ProductID)
+
+		responseOrder := CreateResponseOrder(order,CreateResponseUser(user),CreateResponseProduct(product))
+
+		responseOrders = append(responseOrders, responseOrder)
+	}
+
+	return c.Status(200).JSON(responseOrders)
 }
